@@ -1,8 +1,8 @@
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 
@@ -43,6 +43,11 @@ public class Main {
         saveGame("/Games/savegames/save3.dat", gameProgress3);
         zipFiles("/Games/savegames/savedGP.zip", "/Games/savegames/");
 
+        // Task 3
+        openZip("/Games/savegames/savedGP.zip", "/Games/savegames/");
+        GameProgress gameProgress = null;
+        gameProgress = (GameProgress) openProgress(gameProgress, "/Games/savegames/save1.dat");
+        System.out.println(gameProgress);
 
     }
 
@@ -103,4 +108,35 @@ public class Main {
             }
         }
     }
+
+    // Методы для Task 3
+    public static void openZip(String zipPathName, String zipDir) throws IOException {
+        try (ZipInputStream zis = new ZipInputStream(new FileInputStream(zipPathName))) {
+            ZipEntry ze;
+            String fileName;
+            while ((ze = zis.getNextEntry()) != null) {
+                fileName = ze.getName();
+                FileOutputStream fos = new FileOutputStream(zipDir + fileName);
+                for (int i = zis.read(); i != -1; i = zis.read()) {
+                    fos.write(i);
+                }
+                fos.flush();
+                zis.closeEntry();
+                fos.close();
+            }
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    public static Object openProgress(Object object, String filePathName) {
+        try (FileInputStream fis = new FileInputStream(filePathName);
+             ObjectInputStream ois = new ObjectInputStream(fis)) {
+            object = (Object) ois.readObject();
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+        return object;
+    }
+
 }
