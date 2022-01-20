@@ -14,18 +14,13 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         // Task 1
-        makeDir("/Games/src");
-        makeDir("/Games/res");
-        makeDir("/Games/savegames");
-        makeDir("/Games/temp");
-        makeDir("/Games/src/main");
-        makeDir("/Games/src/test");
-        makeFile("/Games/src/main", "Main.java");
-        makeFile("/Games/src/main", "Utils.java");
-        makeDir("/Games/res/drawables");
-        makeDir("/Games/res/vectors");
-        makeDir("/Games/res/icons");
-        makeFile("/Games/temp", "temp.txt");
+        String[][] makeDirFile = {{"/Games/src", ""}, {"/Games/res", ""}, {"/Games/savegames", ""}, {"/Games/temp", ""}, {"/Games/src/main", ""},
+                {"/Games/src/test", ""}, {"/Games/src/main", "Main.java"}, {"/Games/src/main", "Utils.java"}, {"/Games/res/drawables", ""},
+                {"/Games/res/vectors", ""}, {"/Games/res/icons", ""}, {"/Games/temp", "temp.txt"}};
+        for (int i = 0; i < makeDirFile.length; i++) {
+            if (makeDirFile[i][1].equals("")) makeDir(makeDirFile[i][0]);
+            else makeFile(makeDirFile[i][0], makeDirFile[i][1]);
+        }
 
         try (FileWriter writer = new FileWriter("/Games/temp/temp.txt", false)) {
             writer.write(sb.toString());
@@ -52,6 +47,7 @@ public class Main {
     }
 
     // Методы для Task 1
+
     public static void makeDir(String path) {
         File dir = new File(path);
         if (dir.mkdir()) {
